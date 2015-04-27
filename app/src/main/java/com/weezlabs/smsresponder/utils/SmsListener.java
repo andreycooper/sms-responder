@@ -1,4 +1,4 @@
-package com.weezlabs.smsresponder;
+package com.weezlabs.smsresponder.utils;
 
 
 import android.annotation.SuppressLint;
@@ -12,26 +12,33 @@ import android.provider.Telephony;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
 
+import com.weezlabs.smsresponder.MainActivity;
+import com.weezlabs.smsresponder.R;
+import com.weezlabs.smsresponder.utils.MessageUtil;
+import com.weezlabs.smsresponder.utils.SmsIntentService;
+
 public class SmsListener extends BroadcastReceiver {
 
-    public static final String MESSAGE_KEY = "sms_message_key";
-    private static final String TAG = SmsListener.class.getSimpleName();
+    public static final String MESSAGE_KEY = "com.weezlabs.smsresponder.action.SMS_MESSAGE";
+    public static final int NOTIFY_ID = 12345;
 
     @SuppressLint("NewApi")
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(intent.getAction())) {
-            abortBroadcast();
             StringBuilder stringBuilder = new StringBuilder();
             for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
-                stringBuilder.append("Message received from: ")
-                        .append(smsMessage.getDisplayOriginatingAddress())
-                        .append(" with text: ")
-                        .append(smsMessage.getDisplayMessageBody());
+                if (MessageUtil.isStoredNumber(context, smsMessage.getDisplayOriginatingAddress())) {
+                    abortBroadcast();
+                    stringBuilder.append(context.getString(R.string.notification_phone_number_text))
+                            .append(smsMessage.getDisplayOriginatingAddress())
+                            .append(context.getString(R.string.notification_sms_text))
+                            .append(smsMessage.getDisplayMessageBody());
 
-                SmsIntentService.startActionReceiveSms(context,
-                        smsMessage.getDisplayOriginatingAddress(),
-                        smsMessage.getDisplayMessageBody());
+                    SmsIntentService.startActionReceiveSms(context,
+                            smsMessage.getDisplayOriginatingAddress(),
+                            smsMessage.getDisplayMessageBody());
+                }
             }
             showNotification(context, stringBuilder.toString());
         }
@@ -47,14 +54,14 @@ public class SmsListener extends BroadcastReceiver {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("SMS notification")
+                        .setContentTitle(context.getString(R.string.notification_title_text))
                         .setContentText(messageText);
         mBuilder.setContentIntent(contentIntent);
         mBuilder.setDefaults(Notification.DEFAULT_SOUND);
         mBuilder.setAutoCancel(true);
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(1, mBuilder.build());
+        mNotificationManager.notify(NOTIFY_ID, mBuilder.build());
 
     }
 }

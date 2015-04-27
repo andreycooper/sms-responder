@@ -1,22 +1,15 @@
-package com.weezlabs.smsresponder;
+package com.weezlabs.smsresponder.utils;
 
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.weezlabs.smsresponder.R;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -70,51 +63,16 @@ public class SmsIntentService extends IntentService {
         handler.post(new Runnable() {
             public void run() {
                 Toast.makeText(getApplicationContext(),
-                        "Phone number: " + phoneNumber + "\n" + "Sms: " + smsBody,
+                        getString(R.string.toast_phone_number_text)
+                                + phoneNumber
+                                + "\n"
+                                + getString(R.string.toast_sms_text)
+                                + smsBody,
                         Toast.LENGTH_SHORT)
                         .show();
             }
         });
-        if (isStoredNumber(phoneNumber)) {
-            sendSms(phoneNumber, compileAnswerMessage(smsBody));
-        }
-    }
-
-    private boolean isStoredNumber(String phoneNumber) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String phoneNumbers = preferences.getString(getString(R.string.key_preference_phone_number), null);
-        List<String> phoneNumberList;
-        if (!TextUtils.isEmpty(phoneNumbers)) {
-            phoneNumberList = Arrays.asList(phoneNumbers.split(getString(R.string.delimiter_preference_phone_number)));
-            return phoneNumberList.contains(phoneNumber);
-        }
-        return false;
-    }
-
-    private String compileAnswerMessage(String body) {
-        // TODO: compile answer with prefix and postfix
-        String answerMessage = body;
-        String startBorder, endBorder, prefix, postfix;
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        startBorder = preferences.getString(getString(R.string.key_preference_start_border), null);
-        endBorder = preferences.getString(getString(R.string.key_preference_end_border), null);
-        prefix = preferences.getString(getString(R.string.key_preference_prefix), null);
-        postfix = preferences.getString(getString(R.string.key_preference_postfix), null);
-
-        if (!TextUtils.isEmpty(startBorder) && answerMessage.startsWith(startBorder)) {
-            answerMessage = answerMessage.substring(startBorder.length(), answerMessage.length());
-        }
-        if (!TextUtils.isEmpty(endBorder) && answerMessage.endsWith(endBorder)) {
-            answerMessage = answerMessage.substring(0, endBorder.lastIndexOf(endBorder));
-        }
-        if (!TextUtils.isEmpty(prefix)) {
-            answerMessage = prefix + answerMessage;
-        }
-        if (!TextUtils.isEmpty(postfix)) {
-            answerMessage = answerMessage + postfix;
-        }
-        return answerMessage;
+        sendSms(phoneNumber, MessageUtil.compileAnswerMessage(this, smsBody));
     }
 
     private void sendSms(String phoneNumber, String smsBody) {
