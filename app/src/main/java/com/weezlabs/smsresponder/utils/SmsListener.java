@@ -1,7 +1,6 @@
 package com.weezlabs.smsresponder.utils;
 
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,20 +13,19 @@ import android.telephony.SmsMessage;
 
 import com.weezlabs.smsresponder.MainActivity;
 import com.weezlabs.smsresponder.R;
-import com.weezlabs.smsresponder.utils.MessageUtil;
-import com.weezlabs.smsresponder.utils.SmsIntentService;
 
 public class SmsListener extends BroadcastReceiver {
 
     public static final String MESSAGE_KEY = "com.weezlabs.smsresponder.action.SMS_MESSAGE";
     public static final int NOTIFY_ID = 12345;
 
-    @SuppressLint("NewApi")
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(intent.getAction())) {
             StringBuilder stringBuilder = new StringBuilder();
-            for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
+            SmsMessage[] messages = getMessages(intent);
+
+            for (SmsMessage smsMessage : messages) {
                 if (MessageUtil.isStoredNumber(context, smsMessage.getDisplayOriginatingAddress())) {
                     abortBroadcast();
                     stringBuilder.append(context.getString(R.string.notification_phone_number_text))
@@ -42,6 +40,19 @@ public class SmsListener extends BroadcastReceiver {
             }
             showNotification(context, stringBuilder.toString());
         }
+    }
+
+    private SmsMessage[] getMessages(Intent intent){
+        Object[] messages = (Object[]) intent.getSerializableExtra("pdus");
+
+        int pduCount = messages.length;
+        SmsMessage[] msgs = new SmsMessage[pduCount];
+
+        for (int i = 0; i < pduCount; i++) {
+            byte[] pdu = (byte[]) messages[i];
+            msgs[i] = SmsMessage.createFromPdu(pdu);
+        }
+        return msgs;
     }
 
     private void showNotification(Context context, String messageText) {
