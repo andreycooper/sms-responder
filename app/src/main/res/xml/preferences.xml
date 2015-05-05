@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:dialogTitle="@string/title_dialog_preference_phone_number"
+        android:key="@string/key_preference_phone_number"
+        android:summary="@string/summary_preference_phone_number"
+        android:title="@string/title_preference_phone_number"/>
+    <EditTextPreference
+        android:dialogTitle="@string/title_dialog_preference_start_border"
+        android:key="@string/key_preference_start_border"
+        android:summary="@string/summary_preference_start_border"
+        android:title="@string/title_preference_start_border"/>
+    <EditTextPreference
+        android:dialogTitle="@string/title_dialog_preference_end_border"
+        android:key="@string/key_preference_end_border"
+        android:summary="@string/summary_preference_end_border"
+        android:title="@string/title_preference_end_border"/>
+    <EditTextPreference
+        android:dialogTitle="@string/title_dialog_preference_prefix"
+        android:key="@string/key_preference_prefix"
+        android:summary="@string/summary_preference_prefix"
+        android:title="@string/title_preference_prefix"/>
+    <EditTextPreference
+        android:dialogTitle="@string/title_dialog_preference_postfix"
+        android:key="@string/key_preference_postfix"
+        android:summary="@string/summary_preference_postfix"
+        android:title="@string/title_preference_postfix"/>
+
+</PreferenceScreen>

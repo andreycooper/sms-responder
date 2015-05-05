@@ -1,6 +1,42 @@
 <resources>
     <string name="app_name">SMS Responder</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="label_main_activity_text">Setup options in Settings menu!</string>
     <string name="action_settings">Settings</string>
+    <string name="label_activity_settings">Settings</string>
+    <string name="delimiter_preference_phone_number">,</string>
+
+    <string name="toast_phone_number_text">Phone number:\u0020</string>
+    <string name="toast_sms_text">Sms:\u0020</string>
+
+    <string name="notification_phone_number_text">Message received from:\u0020</string>
+    <string name="notification_sms_text">\u0020with text:\u0020</string>
+    <string name="notification_title_text">SMS notification</string>
+
+    <string name="key_preference_phone_number">pref_phone_numbers</string>
+    <string name="title_preference_phone_number">Phone numbers</string>
+    <string name="summary_preference_phone_number">Enter allowed phone numbers; \"%s\" is a delimiter</string>
+    <string name="title_dialog_preference_phone_number">Enter phone numbers:</string>
+
+    <string name="key_preference_start_border">pref_start_border</string>
+    <string name="title_preference_start_border">Start border-words</string>
+    <string name="summary_preference_start_border">Enter start border-words or leave it blank</string>
+    <string name="title_dialog_preference_start_border">Enter words:</string>
+
+    <string name="key_preference_end_border">pref_end_border</string>
+    <string name="title_preference_end_border">End border-words</string>
+    <string name="summary_preference_end_border">Enter end border-words or leave it blank</string>
+    <string name="title_dialog_preference_end_border">Enter words:</string>
+
+    <string name="key_preference_prefix">pref_message_prefix</string>
+    <string name="title_preference_prefix">Message prefix</string>
+    <string name="summary_preference_prefix">Enter prefix of message answer or leave it blank</string>
+    <string name="title_dialog_preference_prefix">Enter prefix:</string>
+
+    <string name="key_preference_postfix">pref_message_postfix</string>
+    <string name="title_preference_postfix">Message postfix</string>
+    <string name="summary_preference_postfix">Enter postfix of message answer or leave it blank</string>
+    <string name="title_dialog_preference_postfix">Enter postfix:</string>
+
+
 </resources>
